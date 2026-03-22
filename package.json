@@ -3,7 +3,8 @@
   "displayName": "Git Peel",
   "description": "A Visual Studio Code extension that allows you to browse and restore files to previous git commits directly from the editor.",
   "publisher": "dalton-vector",
-  "version": "0.0.1",
+  "icon": "images/icon.png",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.110.0"
   },
