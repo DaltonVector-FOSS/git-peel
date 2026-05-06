@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Git Peel — Browse & Restore Git History in VS Code</title>
+  <meta name="description"
+    content="A powerful VS Code extension to browse commit history, preview previous file versions, and restore with one click. Time-travel through your codebase." />
+  <meta name="keywords"
+    content="VS Code, extension, git, history, commits, restore, version control, developer tools" />
+  <meta name="author" content="Dalton Vector" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Git Peel — Browse & Restore Git History in VS Code" />
+  <meta property="og:description"
+    content="Time-travel through your code. Preview and restore any file to any previous commit, right from your editor." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/hero.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+
+  <!-- Ambient Background -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="orb orb--orange"></div>
+    <div class="orb orb--cyan"></div>
+    <div class="orb orb--purple"></div>
+  </div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="#" class="nav__brand">
+        <img src="assets/icon.png" alt="Git Peel Icon" class="nav__icon" />
+        <span class="nav__title">Git Peel</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="#features" class="nav__link">Features</a></li>
+        <li><a href="#how-it-works" class="nav__link">How It Works</a></li>
+        <li><a href="#demo" class="nav__link">Demo</a></li>
+      </ul>
+      <a href="https://marketplace.visualstudio.com/items?itemName=dalton-vector.git-peel" class="nav__cta"
+        target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M1 3.5L6.5 0L15 3.5V12.5L6.5 16L1 12.5V3.5Z" fill="currentColor" opacity="0.3" />
+          <path d="M1 3.5L6.5 8L1 12.5V3.5Z" fill="currentColor" />
+          <path d="M6.5 0L15 3.5L6.5 8L1 3.5L6.5 0Z" fill="currentColor" opacity="0.7" />
+        </svg>
+        Install Extension
+      </a>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero__grid">
+        <div class="hero__content">
+          <div class="hero__badge reveal">
+            <span class="hero__badge-dot"></span>
+            v0.0.1 — Now Available
+          </div>
+          <h1 class="hero__heading reveal reveal-delay-1">
+            Peel back<br />
+            <span class="gradient-text">your code's</span><br />
+            history.
+          </h1>
+          <p class="hero__sub reveal reveal-delay-2">
+            Browse every commit that touched a file, preview its contents at any point in time, and restore it with a
+            single click — all without leaving VS Code.
+          </p>
+          <div class="hero__actions reveal reveal-delay-3">
+            <a href="https://marketplace.visualstudio.com/items?itemName=dalton-vector.git-peel"
+              class="btn btn--primary" target="_blank" rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 1L14.9282 4.5V11.5L8 15L1.07179 11.5V4.5L8 1Z" stroke="currentColor" stroke-width="1.2" />
+                <path d="M8 5V11M5 8H11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+              Install for VS Code
+            </a>
+            <a href="https://github.com/DaltonVector-FOSS/git-peel" class="btn btn--ghost" target="_blank"
+              rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+              View on GitHub
+            </a>
+          </div>
+          <div class="install-banner reveal reveal-delay-4" id="install-cmd" title="Click to copy">
+            <span class="install-banner__prefix">$</span>
+            <span>ext install dalton-vector.git-peel</span>
+            <span class="install-banner__copy" id="copy-feedback">click to copy</span>
+          </div>
+        </div>
+        <div class="hero__visual reveal reveal-delay-2">
+          <div class="hero__img-wrapper">
+            <img src="assets/hero.png" alt="Git Peel — peeling back layers of code history" width="520" height="520" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FEATURES ========== -->
+  <section class="section" id="features">
+    <div class="container">
+      <span class="section__label reveal">Features</span>
+      <h2 class="section__heading reveal reveal-delay-1">Everything you need to<br />navigate your file's past.</h2>
+      <p class="section__sub reveal reveal-delay-2">Git Peel keeps it simple — no cluttered UI, no complex setup. Just
+        fast, intuitive git history for any file you're working on.</p>
+
+      <div class="features__grid">
+        <!-- Card 1 -->
+        <div class="feature-card reveal">
+          <div class="feature-card__icon feature-card__icon--orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round">
+              <circle cx="12" cy="12" r="4" />
+              <line x1="1.05" y1="12" x2="7" y2="12" />
+              <line x1="17" y1="12" x2="22.95" y2="12" />
+            </svg>
+          </div>
+          <h3 class="feature-card__title">Quick Commit History</h3>
+          <p class="feature-card__desc">Instantly browse all commits that affected the currently open file, displayed in
+            a clean quick-pick interface.</p>
+        </div>
+        <!-- Card 2 -->
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-card__icon feature-card__icon--cyan">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
+          <h3 class="feature-card__title">Live Preview</h3>
+          <p class="feature-card__desc">Preview any file at any commit point without modifying your workspace. See
+            exactly what changed, in context.</p>
+        </div>
+        <!-- Card 3 -->
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-card__icon feature-card__icon--purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+            </svg>
+          </div>
+          <h3 class="feature-card__title">One-Click Restore</h3>
+          <p class="feature-card__desc">Found the version you need? Restore your file to any previous commit state with
+            a single click and confirmation.</p>
+        </div>
+        <!-- Card 4 -->
+        <div class="feature-card reveal">
+          <div class="feature-card__icon feature-card__icon--cyan">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+              <polyline points="13 2 13 9 20 9" />
+            </svg>
+          </div>
+          <h3 class="feature-card__title">Per-File Focused</h3>
+          <p class="feature-card__desc">No repo-level noise. Git Peel shows only the commits relevant to the file you're
+            actively editing.</p>
+        </div>
+        <!-- Card 5 -->
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-card__icon feature-card__icon--orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <h3 class="feature-card__title">Relative Timestamps</h3>
+          <p class="feature-card__desc">Commit dates displayed as human-friendly relative times — "2 hours ago", "3 days
+            ago" — for quick scanning.</p>
+        </div>
+        <!-- Card 6 -->
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-card__icon feature-card__icon--purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h3 class="feature-card__title">Safe Restores</h3>
+          <p class="feature-card__desc">Every restore requires explicit confirmation. Your current work is always one
+            "undo" away from being back.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <span class="section__label reveal">How It Works</span>
+      <h2 class="section__heading reveal reveal-delay-1">Four steps. Zero complexity.</h2>
+      <p class="section__sub reveal reveal-delay-2">Get up and running in seconds — no configuration needed.</p>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step__number">01</div>
+          <h3 class="step__title">Open a File</h3>
+          <p class="step__desc">Open any file that's tracked in your git repository.</p>
+          <div class="step__connector"></div>
+        </div>
+        <div class="step reveal reveal-delay-1">
+          <div class="step__number">02</div>
+          <h3 class="step__title">Run Git Peel</h3>
+          <p class="step__desc">Open the command palette and search for "Git Peel" or "Show Git History".</p>
+          <div class="step__connector"></div>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step__number">03</div>
+          <h3 class="step__title">Browse History</h3>
+          <p class="step__desc">Scroll through all commits that modified the file. Select one to preview its content.
+          </p>
+          <div class="step__connector"></div>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step__number">04</div>
+          <h3 class="step__title">Restore</h3>
+          <p class="step__desc">Found what you need? Hit restore, confirm, and your file is reverted to that commit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DEMO ========== -->
+  <section class="section demo" id="demo">
+    <div class="container">
+      <span class="section__label reveal">See It in Action</span>
+      <h2 class="section__heading reveal reveal-delay-1">Seamless. Native. Fast.</h2>
+      <p class="section__sub reveal reveal-delay-2">Git Peel uses VS Code's native quick-pick UI, so it feels right at
+        home in your editor.</p>
+
+      <div class="demo__image-wrap reveal reveal-delay-3">
+        <img src="assets/preview.png" alt="Git Peel in action — commit history quick-pick in VS Code" width="800"
+          height="800" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SOCIAL PROOF ========== -->
+  <section class="section social-proof" id="social-proof">
+    <div class="container">
+      <span class="section__label reveal">Built for Developers</span>
+      <h2 class="section__heading reveal reveal-delay-1">Lightweight. No dependencies.</h2>
+      <p class="section__sub reveal reveal-delay-2">Git Peel relies only on your local git installation — nothing else
+        to configure or install.</p>
+
+      <div class="stats reveal reveal-delay-3">
+        <div class="stat">
+          <div class="stat__number">0</div>
+          <div class="stat__label">External Dependencies</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number">&lt;200</div>
+          <div class="stat__label">Lines of Code</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number">MIT</div>
+          <div class="stat__label">Open Source License</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="cta-section" id="cta">
+    <div class="container">
+      <div class="cta__card reveal">
+        <h2 class="cta__heading">Ready to peel back time?</h2>
+        <p class="cta__sub">Install Git Peel and start exploring your file history in seconds. Free, open-source, and
+          lightweight.</p>
+        <div class="cta__actions">
+          <a href="https://marketplace.visualstudio.com/items?itemName=dalton-vector.git-peel" class="btn btn--primary"
+            target="_blank" rel="noopener">
+            Install for VS Code
+          </a>
+          <a href="https://github.com/DaltonVector-FOSS/git-peel" class="btn btn--ghost" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            Star on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__left">
+        <img src="assets/icon.png" alt="Git Peel" class="footer__icon" />
+        <span class="footer__text">Git Peel &copy; 2026 Dalton Vector. MIT License.</span>
+      </div>
+      <ul class="footer__links">
+        <li><a href="https://github.com/DaltonVector-FOSS/git-peel" class="footer__link" target="_blank"
+            rel="noopener">GitHub</a></li>
+        <li><a href="https://marketplace.visualstudio.com/items?itemName=dalton-vector.git-peel" class="footer__link"
+            target="_blank" rel="noopener">VS Code Marketplace</a></li>
+        <li><a href="https://github.com/DaltonVector-FOSS/git-peel/issues" class="footer__link" target="_blank"
+            rel="noopener">Report an Issue</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    // === Nav scroll effect ===
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // === Copy install command ===
+    const installCmd = document.getElementById('install-cmd');
+    const copyFeedback = document.getElementById('copy-feedback');
+    installCmd.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('ext install dalton-vector.git-peel');
+        copyFeedback.textContent = 'copied!';
+        copyFeedback.style.color = '#34d399';
+        setTimeout(() => {
+          copyFeedback.textContent = 'click to copy';
+          copyFeedback.style.color = '';
+        }, 2000);
+      } catch {
+        copyFeedback.textContent = 'failed';
+      }
+    });
+
+    // === Scroll reveal ===
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // === Smooth scroll for nav links ===
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
